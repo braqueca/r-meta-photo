@@ -1,37 +1,38 @@
 package com.braquec.rmetaphoto.service;
 
+import com.braquec.rmetaphoto.dto.AlbumDto;
 import com.braquec.rmetaphoto.dto.PhotoDto;
-import com.braquec.rmetaphoto.entity.Photo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class PhotosServiceImpl implements PhotosService {
-    private DataEnricher<Photo, PhotoDto> photoDataEnricher;
+    @Autowired
+    private AlbumsService albumsService;
+
+    private DataConverter<AlbumDto, PhotoDto> photoDataConverter;
 
     private static final String PHOTOS_BASE_URL = "https://jsonplaceholder.typicode.com/photos";
     private RestTemplate restTemplate = new RestTemplate();
 
-    public PhotosServiceImpl(PhotoDataEnricher photoDataEnricher) {
-        this.photoDataEnricher = photoDataEnricher;
+    public PhotosServiceImpl(PhotoDataConverter photoDataConverter) {
+        this.photoDataConverter = photoDataConverter;
     }
 
     @Override
     public List<PhotoDto> getAll() {
-        Photo[] photos = restTemplate.getForObject(PHOTOS_BASE_URL, Photo[].class);
+        List<AlbumDto> albumDtoList = albumsService.getAll();
 
-        return Stream.of(photos).map(photoDataEnricher::enrich).collect(Collectors.toList());
+        return photoDataConverter.convert(albumDtoList);
     }
 
     @Override
     public PhotoDto getById(Long id) {
-        StringBuilder url = new StringBuilder(PHOTOS_BASE_URL);
-        url.append("/").append(id);
+        List<PhotoDto> photos = getAll();
 
-        return photoDataEnricher.enrich(restTemplate.getForObject(url.toString(), Photo.class));
+        return photos.stream().filter(photoDto -> photoDto.getId().equals(id)).findFirst().orElseThrow();
     }
 }
