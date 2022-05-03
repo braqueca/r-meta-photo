@@ -1,13 +1,18 @@
 package com.braquec.rmetaphoto.dto;
 
 import com.braquec.rmetaphoto.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
 import java.util.Objects;
 
 public class AlbumDto {
     private Long id;
     private String title;
     private User user;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<PhotoDto> photos;
 
     public AlbumDto() {
     }
@@ -38,6 +43,15 @@ public class AlbumDto {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @JsonIgnore
+    public List<PhotoDto> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<PhotoDto> photos) {
+        this.photos = photos;
     }
 
     @Override
