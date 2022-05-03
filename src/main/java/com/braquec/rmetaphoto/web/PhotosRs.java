@@ -3,6 +3,7 @@ package com.braquec.rmetaphoto.web;
 import com.braquec.rmetaphoto.dto.PhotoDto;
 import com.braquec.rmetaphoto.service.PhotosService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class PhotosRs {
     private PhotosService photosService;
 
     @GetMapping("")
-    public List<PhotoDto> getAll(@RequestParam Map<String,String> allRequestParams){
+    public Page<PhotoDto> getAll(@RequestParam Map<String,String> allRequestParams){
         return photosService.getAll(allRequestParams);
     }
 
