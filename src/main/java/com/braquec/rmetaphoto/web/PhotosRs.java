@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @ResponseBody
@@ -15,8 +16,8 @@ public class PhotosRs {
     private PhotosService photosService;
 
     @GetMapping("")
-    public List<PhotoDto> getAll(){
-        return photosService.getAll();
+    public List<PhotoDto> getAll(@RequestParam Map<String,String> allRequestParams){
+        return photosService.getAll(allRequestParams);
     }
 
     @GetMapping("/{id}")
