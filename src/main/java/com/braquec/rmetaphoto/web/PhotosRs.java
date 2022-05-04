@@ -12,6 +12,7 @@ import java.util.Map;
 @RestController
 @ResponseBody
 @RequestMapping("/externalapi/photos")
+@CrossOrigin
 public class PhotosRs {
     @Autowired
     private PhotosService photosService;
